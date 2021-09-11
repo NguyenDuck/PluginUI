@@ -20,7 +20,7 @@ class Main extends PluginBase
 	}
 
 	/**
-	 * @param string
+	 * @param string $commands
 	 * @return void
 	 */
 	public function unregister(string ...$commands):void {
