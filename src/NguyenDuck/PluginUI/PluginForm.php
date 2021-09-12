@@ -11,33 +11,28 @@ declare(strict_types=1);
 
 namespace NguyenDuck\PluginUI;
 
-use pocketmine\plugin\PluginBase;
+use NguyenDuck\PluginUI\Main;
+use pocketmine\plugin\Plugin;
+use pocketmine\utils\TextFormat;
+use jojoe77777\FormAPI\Form;
+use function array_map;
+use function count;
+use function sort;
+use const SORT_STRING;
 
-class Main extends PluginBase
+class PluginForm extends Form
 {
-	public function onEnable() {
-		$this->unregister("plugins");
-		$this->registerPluginCommand();
-	}
-
-	/**
-	 * @param string $commands
-	 */
-	public function unregister(string ...$commands) {
-		$commandMap = $this->getServer()->getCommandMap();
-		foreach ($commands as $command) {
-			$command = $commandMap->getCommand($command);
-			if (!is_null($command)) {
-				$command->setLabel("§c".$command."_disabled");
-				if ($commandMap->unregister($command)) {
-					$this->getLogger()->notice("Disabled Command ".$command);
-				}
-			}
+	public function __construct(?callable $callable, $sender) {
+		parent::__construct($callable);
+		$this->list = array_map(function(Plugin $plugin): string{
+			return ($plugin->isEnabled() ? TextFormat::GREEN : TextFormat::RED) . $plugin->getDescription()->getFullName();
+		}, $sender->getServer()->getPluginManager()->getPlugins());
+		sort($this->list, SORT_STRING);
+		$this->data["type"] = "form";
+		$this->data["title"] = "Plugins(" . count($this->list) . "):";
+		$this->data["content"] = "";
+		for ($i=0; $i < count($this->list); $i++) { 
+			$this->data["buttons"][$i] = ["text" => $this->list[$i]];
 		}
-	}
-
-	public function registerPluginCommand() {
-		$this->getServer()->getCommandMap()->register("pocketmine", new PluginUICommand("plugins"));
-		$this->getLogger()->notice("Registered Command plugins");
 	}
 }

@@ -11,33 +11,58 @@ declare(strict_types=1);
 
 namespace NguyenDuck\PluginUI;
 
-use pocketmine\plugin\PluginBase;
+use pocketmine\Player;
+use pocketmine\plugin\Plugin;
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
+use pocketmine\command\ConsoleCommandSender;
+use pocketmine\lang\TranslationContainer;
+use pocketmine\utils\TextFormat;
+use jojoe77777\FormAPI\ModalForm;
+use function array_map;
+use function count;
+use function implode;
+use function sort;
+use const SORT_STRING;
 
-class Main extends PluginBase
+class PluginUICommand extends Command
 {
-	public function onEnable() {
-		$this->unregister("plugins");
-		$this->registerPluginCommand();
+	public function __construct(string $name) {
+		parent::__construct(
+			$name,
+			"%pocketmine.command.plugins.description"." as UI",
+			"%pocketmine.command.plugins.usage",
+			["pl"]
+		);
+		$this->setPermission("pocketmine.command.plugins");
 	}
-
 	/**
-	 * @param string $commands
+	 * @return bool
 	 */
-	public function unregister(string ...$commands) {
-		$commandMap = $this->getServer()->getCommandMap();
-		foreach ($commands as $command) {
-			$command = $commandMap->getCommand($command);
-			if (!is_null($command)) {
-				$command->setLabel("§c".$command."_disabled");
-				if ($commandMap->unregister($command)) {
-					$this->getLogger()->notice("Disabled Command ".$command);
-				}
-			}
+	public function execute(CommandSender $sender, string $commandLabel, array $args) {
+		if(!$this->testPermission($sender)){
+			return true;
 		}
+
+		$list = array_map(function(Plugin $plugin): string{
+			return ($plugin->isEnabled() ? TextFormat::GREEN : TextFormat::RED) . $plugin->getDescription()->getFullName();
+		}, $sender->getServer()->getPluginManager()->getPlugins());
+		sort($list, SORT_STRING);
+
+		if ($sender instanceof ConsoleCommandSender) {
+			$sender->sendMessage(new TranslationContainer("pocketmine.command.plugins.success", [count($list), implode(TextFormat::WHITE . ", ", $list)]));
+			return true;
+		}
+
+		$this->getForm($sender)->sendToPlayer($sender);
+		return true;
 	}
 
-	public function registerPluginCommand() {
-		$this->getServer()->getCommandMap()->register("pocketmine", new PluginUICommand("plugins"));
-		$this->getLogger()->notice("Registered Command plugins");
+	/** @return PluginForm */
+	private function getForm(CommandSender $sender): PluginForm {
+		$form = new PluginForm(function(Player $player, $data) {
+			$player->sendMessage("Data :" . $data);
+		}, $sender);
+		return $form;
 	}
 }
