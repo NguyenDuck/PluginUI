@@ -35,16 +35,11 @@ class PluginUICommand extends Command
 			"%pocketmine.command.plugins.usage",
 			["pl"]
 		);
-		$this->setPermission("pocketmine.command.plugins");
 	}
 	/**
 	 * @return bool
 	 */
 	public function execute(CommandSender $sender, string $commandLabel, array $args) {
-		if(!$this->testPermission($sender)){
-			return true;
-		}
-
 		$list = array_map(function(Plugin $plugin): string{
 			return ($plugin->isEnabled() ? TextFormat::GREEN : TextFormat::RED) . $plugin->getDescription()->getFullName();
 		}, $sender->getServer()->getPluginManager()->getPlugins());
@@ -67,7 +62,7 @@ class PluginUICommand extends Command
 	/** @return PluginForm */
 	private function getForm(array $plugins): PluginForm {
 		$form = new PluginForm(function(Player $player, $data) {
-			$pluginForm = new PluginInfoForm(null, $this->plugins[$data]);
+			$pluginForm = new PluginInfoForm(null, (!is_null($this->plugins[$data])?$this->plugins[$data]:"PluginUI"));
 			$pluginForm->sendToPlayer($player);
 		}, $plugins);
 		return $form;
