@@ -27,6 +27,8 @@ use const SORT_STRING;
 
 class PluginUICommand extends Command
 {
+	private $sender;
+	private $plugins;
 	public function __construct(string $name) {
 		parent::__construct(
 			$name,
@@ -54,15 +56,21 @@ class PluginUICommand extends Command
 			return true;
 		}
 
-		$this->getForm($sender)->sendToPlayer($sender);
+		$this->plugins = array_map(function(Plugin $plugin): string{
+			return $plugin->getDescription()->getName();
+		}, $sender->getServer()->getPluginManager()->getPlugins());
+		sort($this->plugins, SORT_STRING);
+
+		$this->getForm($list)->sendToPlayer($sender);
 		return true;
 	}
 
 	/** @return PluginForm */
-	private function getForm(CommandSender $sender): PluginForm {
+	public static function getForm(array $plugins): PluginForm {
 		$form = new PluginForm(function(Player $player, $data) {
-			$player->sendMessage("Data :" . $data);
-		}, $sender);
+			$pluginForm = new PluginInfoForm(null, $this->plugins[$data]);
+			$pluginForm->sendToPlayer($player);
+		}, $plugins);
 		return $form;
 	}
 }
