@@ -32,10 +32,10 @@ class PluginInfoForm extends Form
             }
             $commands = $commands."\n".$text[1]." - ".$text[0];
         }
-        $content = $plugin->getFullName()." by ".$authors."\n".$plugin->getDescription()."\n".$commands;
+        $content = $plugin->getFullName()." bởi ".$authors."\n".$plugin->getDescription()."\n".$commands;
         $this->data["type"] = "form";
         $this->data["title"] = $plugin->getName();
         $this->data["content"] = $content;
-        $this->data["buttons"][] = ["text" => "Exit"];
+        $this->data["buttons"][] = ["text" => "Thoát"];
     }
 }
