@@ -26,6 +26,6 @@ class PluginInfoForm extends Form
         $this->data["type"] = "form";
         $this->data["title"] = $plugin->getName();
         $this->data["content"] = $content;
-        $this->data["buttons"] = "";
+        $this->data["buttons"][] = ["text" => "Exit"];
     }
 }
