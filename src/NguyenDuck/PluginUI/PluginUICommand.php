@@ -41,7 +41,7 @@ class PluginUICommand extends Command
 	 */
 	public function execute(CommandSender $sender, string $commandLabel, array $args) {
 		$list = array_map(function(Plugin $plugin): string{
-			return ($plugin->isEnabled() ? TextFormat::GREEN : TextFormat::RED) . $plugin->getDescription()->getFullName();
+			return $plugin->getDescription()->getFullName();
 		}, $sender->getServer()->getPluginManager()->getPlugins());
 		sort($list, SORT_STRING);
 
@@ -62,8 +62,10 @@ class PluginUICommand extends Command
 	/** @return PluginForm */
 	private function getForm(array $plugins): PluginForm {
 		$form = new PluginForm(function(Player $player, $data) {
-			$pluginForm = new PluginInfoForm(null, (!is_null($this->plugins[$data])?$this->plugins[$data]:"PluginUI"));
-			$pluginForm->sendToPlayer($player);
+			if ($data) {
+				$pluginForm = new PluginInfoForm(null, $this->plugins[$data]);
+				$pluginForm->sendToPlayer($player);
+			}
 		}, $plugins);
 		return $form;
 	}
