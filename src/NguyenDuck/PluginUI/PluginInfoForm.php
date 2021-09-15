@@ -22,20 +22,23 @@ class PluginInfoForm extends Form
 {
     public function __construct(?callable $callable = null, string $pluginName) {
         parent::__construct($callable);
-        $plugin = Server::getInstance()->getPluginManager()->getPlugin($pluginName)->getDescription();
+
+        $plugins = Server::getInstance()->getPluginManager()->getPlugin($pluginName);
+        $plugin = $plugins->getDescription();
+        
         $authors = (count($plugin->getAuthors())>1?"\n":"").implode(", ", $plugin->getAuthors());
-        $commands = "";
-        foreach ($plugin->getCommands() as $value) {
-            $text = [];
-            foreach ($value as $t) {
-                array_push($text, $t);
-            }
-            $commands = $commands."\n".$text[1]." - ".$text[0];
-        }
-        $content = $plugin->getFullName()." by ".$authors."\n".$plugin->getDescription()."\n".$commands;
+        $authorsText = ($authors?" bởi ".$authors:"");
+        $pluginEnabledText = "Tình Trạng: ".($plugins->isEnabled()?"Đã":"Chưa")." Kích Hoạt";
+
+        $content = [
+            $plugin->getFullName().$authorsText,
+            $pluginEnabledText,
+            $plugin->getDescription()
+        ];
+
         $this->data["type"] = "form";
         $this->data["title"] = $plugin->getName();
-        $this->data["content"] = $content;
-        $this->data["buttons"][] = ["text" => "Exit"];
+        $this->data["content"] = implode("\n", $content);
+        $this->data["buttons"][] = ["text" => "Thoát"];
     }
 }

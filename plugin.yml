@@ -3,7 +3,8 @@ name: PluginUI
 version: 1.0.0
 main: NguyenDuck\PluginUI\Main
 api: 3.22.5
-description: Accept player viewable plugin info as UI
-depend: FormAPI
+description: Cho phép người chơi xem thông tin của các plugin bằng UI
 author: NguyenDuck
+depends:
+  - FormAPI
 ...
