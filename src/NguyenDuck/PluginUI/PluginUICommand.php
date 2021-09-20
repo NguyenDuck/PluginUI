@@ -62,7 +62,7 @@ class PluginUICommand extends Command
 	/** @return PluginForm */
 	private function getForm(array $plugins): PluginForm {
 		$form = new PluginForm(function(Player $player, $data) {
-			if ($data) {
+			if (is_numeric($data)) {
 				$pluginForm = new PluginInfoForm(null, $this->plugins[$data]);
 				$pluginForm->sendToPlayer($player);
 			}
