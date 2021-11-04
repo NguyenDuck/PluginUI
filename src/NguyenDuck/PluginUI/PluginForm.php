@@ -13,7 +13,7 @@ namespace NguyenDuck\PluginUI;
 
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
-use jojoe77777\FormAPI\Form;
+use libs\jojoe77777\FormAPI\Form;
 use function array_map;
 use function count;
 use function sort;
