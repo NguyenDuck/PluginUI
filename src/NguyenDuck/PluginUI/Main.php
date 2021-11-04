@@ -29,15 +29,12 @@ class Main extends PluginBase
 			$command = $commandMap->getCommand($command);
 			if (!is_null($command)) {
 				$command->setLabel("§c".$command."_disabled");
-				if ($commandMap->unregister($command)) {
-					$this->getLogger()->notice("Disabled Command ".$command);
-				}
+				$commandMap->unregister($command);
 			}
 		}
 	}
 
 	public function registerPluginCommand() {
 		$this->getServer()->getCommandMap()->register("pocketmine", new PluginUICommand("plugins"));
-		$this->getLogger()->notice("Registered Command plugins");
 	}
 }

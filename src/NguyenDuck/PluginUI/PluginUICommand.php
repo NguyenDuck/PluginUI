@@ -55,7 +55,7 @@ class PluginUICommand extends Command
 		}, $sender->getServer()->getPluginManager()->getPlugins());
 		sort($this->plugins, SORT_STRING);
 
-		$this->getForm($list)->sendToPlayer($sender);
+		$this->getForm($this->plugins)->sendToPlayer($sender);
 		return true;
 	}
 

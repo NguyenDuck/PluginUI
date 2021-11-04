@@ -1,8 +1,8 @@
 ---
 name: PluginUI
-version: 1.0.1
+version: 1.0.2
 main: NguyenDuck\PluginUI\Main
-api: 3.22.5
+api: 3.24.0
 description: Cho phép người chơi xem thông tin của các plugin bằng UI
 author: NguyenDuck
 depends:
