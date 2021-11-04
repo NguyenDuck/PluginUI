@@ -18,7 +18,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\lang\TranslationContainer;
 use pocketmine\utils\TextFormat;
-use jojoe77777\FormAPI\ModalForm;
+use libs\jojoe77777\FormAPI\ModalForm;
 use function array_map;
 use function count;
 use function implode;
@@ -55,7 +55,7 @@ class PluginUICommand extends Command
 		}, $sender->getServer()->getPluginManager()->getPlugins());
 		sort($this->plugins, SORT_STRING);
 
-		$this->getForm($list)->sendToPlayer($sender);
+		$this->getForm($this->plugins)->sendToPlayer($sender);
 		return true;
 	}
 
