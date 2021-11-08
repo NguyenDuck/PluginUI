@@ -18,7 +18,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\lang\TranslationContainer;
 use pocketmine\utils\TextFormat;
-use libs\jojoe77777\FormAPI\ModalForm;
+use jojoe77777\FormAPI\ModalForm;
 use function array_map;
 use function count;
 use function implode;

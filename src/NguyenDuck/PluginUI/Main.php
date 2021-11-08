@@ -12,12 +12,18 @@ declare(strict_types=1);
 namespace NguyenDuck\PluginUI;
 
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\TextFormat;
 
 class Main extends PluginBase
 {
 	public function onEnable() {
-		$this->unregister("plugins");
-		$this->registerPluginCommand();
+		if (!$this->getServer()->getPluginManager()->getPlugin("FormAPI")) {
+			$this->getLogger()->critical(TextFormat::RED."FormAPI Plugin Not Found!");
+			$this->getServer()->getPluginManager()->disablePlugin($this);
+		} else {
+			$this->unregister("plugins");
+			$this->registerPluginCommand();
+		}
 	}
 
 	/**
